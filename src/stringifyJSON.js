@@ -12,13 +12,22 @@ var stringifyJSON = function (obj) {
       stringifyResult += '\"'+ item + '\"';
     } else if (typeof item === 'object' && !Array.isArray(item) && item !== null) {
       stringifyResult += '{';
-
+      // set an addition value to add to every iteration to determine the size of the object.If it's still zero after completion, the object is empty
+      let objSize = 0;
       for (var key in item) {
-        stringifyResult += '\"' + key + '\"' + ':';
-        toString(item[key]);
-        stringifyResult += ',';
+        objSize++;
       }
-      stringifyResult = stringifyResult.substring(0, stringifyResult.length - 1) + '}';
+      if (objSize === 0) {
+        stringifyResult += '}';
+      // If the object is not empty, continue as normal
+      } else {
+        for (var key in item) {
+          stringifyResult += '\"' + key + '\"' + ':';
+          toString(item[key]);
+          stringifyResult += ',';
+        }
+        stringifyResult = stringifyResult.substring(0, stringifyResult.length - 1) + '}';
+      }
 
     } else if (Array.isArray(item)) {
       stringifyResult += '[';
